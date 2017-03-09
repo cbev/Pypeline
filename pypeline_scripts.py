@@ -31,6 +31,7 @@ def read_in_longlats(mappingfile):
     csvfile.close()
     return(maptable)
 
+print 2+2
 
 # ### CIG (DHSVM)-oriented functions
 
