@@ -252,7 +252,7 @@ def decompbz2(filename):
 # In[ ]:
 
 # read in the longitude and latitude points from the reference mapping file
-def getClimateData_DailyMET_Livneh2013(homedir, mappingfile):
+def getClimateData_DailyMET_livneh2013(homedir, mappingfile):
     
     # generate table of lats and long coordinates
     maptable = read_in_longlats(mappingfile)
@@ -290,25 +290,6 @@ def getClimateData_DailyMET_Livneh2016(homedir, mappingfile):
 
     # download the data
     ftp_download_p(dailyMETlocations2016)
-    os.chdir(homedir)
-    return(filedir)
-
-
-
-def getClimateData_DailyVIC_Livneh2013(homedir, mappingfile):
-    
-    # generate table of lats and long coordinates
-    maptable = read_in_longlats(mappingfile)
-    
-    # compile the longitude and latitude points
-    dailyVIClocations2013 = compile_VICASCII_Livneh2013_locations(maptable)
-
-    # check and generate VIC_ASCII Flux model livneh 2016 data directory
-    filedir=homedir+'livneh2013/Daily_VIC_1915_2011/'
-    ensure_dir(filedir)
-
-    # Download the livneh 2016 VIC_ASCII Flux model data files
-    ftp_download_p(dailyVIClocations2013)
     os.chdir(homedir)
     return(filedir)
 
