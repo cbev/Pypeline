@@ -11,14 +11,16 @@ Search for the branch to work on, or else start typing-in a new branch name and 
     
     Option B: If you are already HydroShare savvy and you have saved a Jupyter Notebook in a Generic Resource, select the Resource from your My Resources tab. Click on the blue "Open With" butoon in the top right in the Resource landing page.  Pick "JupyterHub-USU beta" or "JupyterHub-NCSA". 
     
+Click on Jupyter logo (top left)
 Click on 'Notebooks' (The home folder is /home/jovyan/work)
 Click on "New," make a new folder named "Observatory," then click on Observatory.
 Inline image 2
 
 #Clone-in the Pypeline Github repository
 Click on "New,"and open a new terminal.
-"cd Observatory" (change working directory to Observatory).
+"cd notebooks/Observatory" (change working directory to Observatory).
 "git clone https://github.com/cbev/Pypeline.git" (Download the latest Master branch)
+"cd Pypeline"(change working directory to Pypeline)
 "git checkout <name of branch> (make sure that the changes are not directed at the Master - it gets messy!)
 For development, until we have pushed to HydroShare-Jupyter Hub Utilities on Github, copy the scripts to your local utilites/ folder
 "cp pypeline_scripts.py ../../utilities" (This saves and overwrites pypeline_scripts.py in the utilities folder.
