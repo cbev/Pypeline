@@ -16,7 +16,11 @@ import pandas
 import wget
 
 
+
 # ## Define internal operations for downloading data
+
+
+print 'Version1 4/4/17' 
 
 # In[1]:
 
@@ -31,7 +35,6 @@ def read_in_longlats(mappingfile):
     csvfile.close()
     return(maptable)
 
-print 2+2
 
 # ### CIG (DHSVM)-oriented functions
 
@@ -97,10 +100,16 @@ def compile_VICASCII_Livneh2013_locations(maptable):
     locations2013=[]
     for row in maptable:
         if maptable.index(row)!=0:
-            loci='_'.join(['VIC_subdaily_fluxes_Livneh_CONUSExt_v.1.2_2013',row[latitude], row[longitude]])
-            url=["ftp://ftp.hydro.washington.edu/pub/blivneh/CONUS/Derived.Subdaily.Outputs.asc.v.1.2.1915.2011.bz2/fluxes.125.120.37.49/",loci,".bz2"]
+
+            loci='_'.join(['VIC_fluxes_Livneh_CONUSExt_v.1.2_2013',row[latitude], row[longitude]])
+            url=["ftp://ftp.hydro.washington.edu/pub/blivneh/CONUS/Fluxes.asc.v.1.2.1915.2011.bz2/fluxes.125.120.37.49/",loci,".bz2"]
+            #or
+            #url=["ftp://ftp.hydro.washington.edu/pub/blivneh/CONUS/Fluxes.asc.v.1.2.1915.2011.bz2/fluxes.canada.columbia/",loci,".bz2"]
+            
             locations2013.append(''.join(url))
     return(locations2013)
+
+
 
 
 # ### Climate (Meteorological observations)-oriented functions
@@ -250,6 +259,25 @@ def decompbz2(filename):
 # formerly 'getClimateData_subdailyMET_Livneh2013.py'
 
 # In[ ]:
+
+
+# read in the longitude and latitude points from the reference mapping file
+def getClimateData_DailyVIC_livneh2013(homedir, mappingfile):
+    
+    # generate table of lats and long coordinates
+    maptable = read_in_longlats(mappingfile)
+    
+    # compile the longitude and latitude points
+    dailyVIClocations2013 = compile_VICASCII_Livneh2013_locations(maptable)
+
+    # check and generate VIC_ASCII Flux model livneh 2016 data directory
+    filedir=homedir+'livneh2013/Daily_VIC_1915_2011/'
+    ensure_dir(filedir)
+
+    # Download the livneh 2016 VIC_ASCII Flux model data files
+    ftp_download_p(dailyVIClocations2013)
+    os.chdir(homedir)
+    return(filedir)
 
 # read in the longitude and latitude points from the reference mapping file
 def getClimateData_DailyMET_livneh2013(homedir, mappingfile):
