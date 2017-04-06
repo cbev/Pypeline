@@ -15,9 +15,13 @@ import bz2
 import pandas
 import wget
 
-print 'Version1 4/4/17' 
+
 
 # ## Define internal operations for downloading data
+
+
+print 'Version1 4/4/17' 
+
 # In[1]:
 
 # read in reference locations
@@ -96,6 +100,7 @@ def compile_VICASCII_Livneh2013_locations(maptable):
     locations2013=[]
     for row in maptable:
         if maptable.index(row)!=0:
+
             loci='_'.join(['VIC_fluxes_Livneh_CONUSExt_v.1.2_2013',row[latitude], row[longitude]])
             url=["ftp://ftp.hydro.washington.edu/pub/blivneh/CONUS/Fluxes.asc.v.1.2.1915.2011.bz2/fluxes.125.120.37.49/",loci,".bz2"]
             #or
@@ -104,20 +109,7 @@ def compile_VICASCII_Livneh2013_locations(maptable):
             locations2013.append(''.join(url))
     return(locations2013)
 
-# compile file URLs
-def compile_VICASCIIsubdaily_Livneh2013_locations(maptable):
-    # index the lat long fields
-    latitude=maptable[0].index('LAT')
-    longitude=maptable[0].index('LONG_')
-    
-    # compile the VIC.ASCII data from Livneh 2013
-    locations2013=[]
-    for row in maptable:
-        if maptable.index(row)!=0:
-            loci='_'.join(['VIC_subdaily_fluxes_Livneh_CONUSExt_v.1.2_2013',row[latitude], row[longitude]])
-            url=["ftp://ftp.hydro.washington.edu/pub/blivneh/CONUS/Derived.Subdaily.Outputs.asc.v.1.2.1915.2011.bz2/fluxes.125.120.37.49/",loci,".bz2"]
-            locations2013.append(''.join(url))
-    return(locations2013)
+
 
 
 # ### Climate (Meteorological observations)-oriented functions
@@ -267,6 +259,8 @@ def decompbz2(filename):
 # formerly 'getClimateData_subdailyMET_Livneh2013.py'
 
 # In[ ]:
+
+
 # read in the longitude and latitude points from the reference mapping file
 def getClimateData_DailyVIC_livneh2013(homedir, mappingfile):
     
@@ -284,7 +278,6 @@ def getClimateData_DailyVIC_livneh2013(homedir, mappingfile):
     ftp_download_p(dailyVIClocations2013)
     os.chdir(homedir)
     return(filedir)
-
 
 # read in the longitude and latitude points from the reference mapping file
 def getClimateData_DailyMET_livneh2013(homedir, mappingfile):
