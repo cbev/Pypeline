@@ -1,15 +1,4 @@
 
-# coding: utf-8
-
-# In[ ]:
-
-
-
-
-# # Wrangling libraries
-
-# In[1]:
-
 # Import python modules
 import os
 import os.path
@@ -20,14 +9,9 @@ import bz2
 import pandas
 import wget
 
-
-
 # ## Define internal operations for downloading data
 
-
 print 'Version 4/10/17'
-
-# In[1]:
 
 # read in reference locations
 def read_in_longlats(mappingfile):
@@ -40,10 +24,7 @@ def read_in_longlats(mappingfile):
     csvfile.close()
     return(maptable)
 
-
 # ### CIG (DHSVM)-oriented functions
-
-# In[2]:
 
 # index and extract longitude and latitude points
 def compile_bc_Livneh2013_locations(maptable):
@@ -56,7 +37,7 @@ def compile_bc_Livneh2013_locations(maptable):
     for row in maptable:
         if maptable.index(row)!=0:
             basename='_'.join(['data',row[latitude], row[longitude]])
-            url=['http://cses.washington.edu/rocinante/Livneh/bcLivneh_WWA_2013/forcs_dhsvm/',basename]
+            url=['http://cses.washington.edu/rocinante/Livneh/bcLivneh_WWA_2013/forcings_ascii/',basename]
             locations2013.append(''.join(url))
     return(locations2013)
 
@@ -165,7 +146,7 @@ def compile_dailyMET_Livneh2015_locations(maptable):
 
 # ### WRF-oriented functions
 
-# compile file URLs
+# compile file URLs  
 
 # index and extract longitude and latitude points for raw WRF NNRP
 def compile_wrfnnrp_raw_Salathe2014_locations(maptable):
@@ -209,12 +190,12 @@ def ensure_dir(f):
     os.chdir(f)
 
 # Download the livneh 2013 files to the livneh2013 subdirectory
-def wget_download(listofinterest, localfiledir):
+def wget_download(listofinterest):
            
     # check and download each location point, if it doesn't already exist in the download directory
     for fileurl in listofinterest:
         basename=os.path.basename(fileurl)
-        filename=localfiledir + basename # file location on the local directory
+        filename=os.path.join(os.getcwd(), basename) # file location on the local directory
         if os.path.isfile(filename):
             print('file already exists: ' + basename)
             continue
@@ -223,13 +204,13 @@ def wget_download(listofinterest, localfiledir):
             wget.close()
             print(' downloaded: ' + basename)
         except:
-            print('File does not exist: ' + basename)
+            print('File does not exist at this URL: ' + basename)
         
 # Download the livneh 2013 files to the livneh2013 subdirectory
 def wget_download_one(fileurl):
     # check and download each location point, if it doesn't already exist in the download directory
     basename=os.path.basename(fileurl)
-    filename=localfiledir + basename # file location on the local directory
+    filename=os.path.join(os.getcwd(), basename) # file location on the local directory
     if os.path.isfile(filename):
         print('file already exists: ' + basename)
     else:
@@ -237,7 +218,7 @@ def wget_download_one(fileurl):
             wget.download(fileurl)
             print('downloaded: ' + basename)
         except:
-            print('File does not exist: ' + basename)
+            print('File does not exist at this URL: ' + basename)
     
 def wget_download_p(listofinterest):
     from multiprocessing import Pool
@@ -271,7 +252,7 @@ def ftp_download(listofinterest):
             # decompress the file
             decompbz2(filename)
         except:
-            print('does not exist: '+fileurl)
+            print('File does not exist at this URL: '+fileurl)
         
         
 
@@ -297,7 +278,7 @@ def ftp_download_one(loci):
             # decompress the file
             decompbz2(filename)
         except:
-            print('File does not exist: '+fileurl)
+            print('File does not exist at this URL: '+fileurl)
 
 def ftp_download_p(listofinterest):
     from multiprocessing import Pool
@@ -321,10 +302,6 @@ def decompbz2(filename):
 # ## Wrapper scripts
 
 # ### Get Daily Meteorological data from Livneh 2013
-# formerly 'getClimateData_subdailyMET_Livneh2013.py'
-
-# In[ ]:
-
 
 # read in the longitude and latitude points from the reference mapping file
 def getClimateData_DailyVIC_USA_livneh2013(homedir, mappingfile):
@@ -379,6 +356,22 @@ def getClimateData_DailyMET_livneh2013(homedir, mappingfile):
     os.chdir(homedir)
     return(filedir)
 
+def getClimateData_DailyMET_bcLivneh2013(homedir, mappingfile):
+    
+    # read in the longitude and latitude points from the reference mapping file
+    maptable = read_in_longlats(mappingfile)
+    
+    # compile the longitude and latitude points
+    dailyMET_bcLivneh_locations2013 = compile_bc_Livneh2013_locations(maptable)
+
+    # check and generate baseline_corrected livneh2013 data directory
+    filedir=homedir+'livneh2013/Daily_MET_1915_2011/bc/'
+    ensure_dir(filedir)
+
+    # download the data
+    wget_download_p(dailyMET_bcLivneh_locations2013)
+    os.chdir(homedir)
+    return(filedir)
 
 # read in the longitude and latitude points from the reference mapping file
 def getClimateData_DailyVIC_livneh2015(homedir, mappingfile):
@@ -439,6 +432,7 @@ def getClimateData_DailyMET_bcWRF(homedir, mappingfile):
     wget_download_p(dailyMET_WRF_locations2014)
     os.chdir(homedir)
     return(filedir)
+
 
 
 
@@ -734,5 +728,3 @@ def specialTavgMeans(VarTable):
           meanpermonth_daily,
           meanallpermonth_daily,
           anom_month_daily)
-
-
