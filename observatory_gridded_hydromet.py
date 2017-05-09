@@ -11,7 +11,7 @@ import wget
 
 # ## Define internal operations for downloading data
 
-print 'Version 4/10/17'
+print 'Version 5/1/17'
 
 # read in reference locations
 def read_in_longlats(mappingfile):
@@ -313,7 +313,7 @@ def getClimateData_DailyVIC_USA_livneh2013(homedir, mappingfile):
     dailyVIClocations2013 = compile_VICASCII_Livneh2013_USA_locations(maptable)
 
     # check and generate VIC_ASCII Flux model livneh 2016 data directory
-    filedir=homedir+'livneh2013/Daily_VIC_1915_2011/'
+    filedir=homedir+'/livneh2013/Daily_VIC_1915_2011/'
     ensure_dir(filedir)
 
     # Download the livneh 2016 VIC_ASCII Flux model data files
@@ -330,7 +330,7 @@ def getClimateData_DailyVIC_CAN_livneh2013(homedir, mappingfile):
     dailyVIClocations2013 = compile_VICASCII_Livneh2013_CAN_locations(maptable)
 
     # check and generate VIC_ASCII Flux model livneh 2016 data directory
-    filedir=homedir+'livneh2013/Daily_VIC_1915_2011/'
+    filedir=homedir+'/livneh2013/Daily_VIC_1915_2011/'
     ensure_dir(filedir)
 
     # Download the livneh 2016 VIC_ASCII Flux model data files
@@ -348,7 +348,7 @@ def getClimateData_DailyMET_livneh2013(homedir, mappingfile):
     dailyMETlocations2013 = compile_dailyMET_Livneh2013_locations(maptable)
 
     # check and generate VIC_ASCII Flux model livneh 2016 data directory
-    filedir=homedir+'livneh2013/Daily_MET_1915_2011/'
+    filedir=homedir+'/livneh2013/Daily_MET_1915_2011/'
     ensure_dir(filedir)
 
     # Download the livneh 2016 VIC_ASCII Flux model data files
@@ -365,7 +365,7 @@ def getClimateData_DailyMET_bcLivneh2013(homedir, mappingfile):
     dailyMET_bcLivneh_locations2013 = compile_bc_Livneh2013_locations(maptable)
 
     # check and generate baseline_corrected livneh2013 data directory
-    filedir=homedir+'livneh2013/Daily_MET_1915_2011/bc/'
+    filedir=homedir+'/livneh2013/Daily_MET_1915_2011/bc/'
     ensure_dir(filedir)
 
     # download the data
@@ -383,7 +383,7 @@ def getClimateData_DailyVIC_livneh2015(homedir, mappingfile):
     dailyVIClocations2015 = compile_VICASCII_Livneh2015_locations(maptable)
 
     # check and generate VIC_ASCII Flux model livneh 2016 data directory
-    filedir=homedir+'livneh2016/Daily_VIC_1950_2013/'
+    filedir=homedir+'/livneh2016/Daily_VIC_1950_2013/'
     ensure_dir(filedir)
 
     # Download the livneh 2016 VIC_ASCII Flux model data files
@@ -407,7 +407,7 @@ def getClimateData_DailyMET_rawWRF(homedir, mappingfile):
     dailyMET_WRF_locations2014 = compile_wrfnnrp_raw_Salathe2014_locations(maptable)
 
     # check and generate baseline_corrected livneh2013 data directory
-    filedir=homedir+'Salathe2014/WWA_1950_2010/raw/'
+    filedir=homedir+'/Salathe2014/WWA_1950_2010/raw/'
     ensure_dir(filedir)
 
     # download the data
@@ -425,7 +425,7 @@ def getClimateData_DailyMET_bcWRF(homedir, mappingfile):
     dailyMET_WRF_locations2014 = compile_wrfnnrp_bc_Salathe2014_locations(maptable)
 
     # check and generate baseline_corrected livneh2013 data directory
-    filedir=homedir+'Salathe2014/WWA_1950_2010/bc/'
+    filedir=homedir+'/Salathe2014/WWA_1950_2010/bc/'
     ensure_dir(filedir)
 
     # download the data
