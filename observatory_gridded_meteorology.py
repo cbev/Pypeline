@@ -16,7 +16,11 @@ import pandas
 import wget
 
 
+
 # ## Define internal operations for downloading data
+
+
+print 'Version1 4/6/17' 
 
 # In[1]:
 
@@ -31,7 +35,6 @@ def read_in_longlats(mappingfile):
     csvfile.close()
     return(maptable)
 
-print 2+2
 
 # ### CIG (DHSVM)-oriented functions
 
@@ -73,19 +76,19 @@ def compile_Livneh2013_locations(maptable):
 # In[3]:
 
 # compile file URLs
-def compile_VICASCII_Livneh2016_locations(maptable):
+def compile_VICASCII_Livneh2015_locations(maptable):
     # index the lat long fields
     latitude=maptable[0].index('LAT')
     longitude=maptable[0].index('LONG_')
     
     # compile the VIC.ASCII data from Livneh 2016
-    locations2016=[]
+    locations2015=[]
     for row in maptable:
         if maptable.index(row)!=0:
             loci='_'.join(['Fluxes_Livneh_NAmerExt_15Oct2014',row[latitude], row[longitude]])
             url=["ftp://192.12.137.7/pub/dcp/archive/OBS/livneh2014.1_16deg/VIC.ASCII/latitude.",row[latitude],'/',loci,'.bz2']
-            locations2016.append(''.join(url))
-    return(locations2016)
+            locations2015.append(''.join(url))
+    return(locations2015)
 
 # compile file URLs
 def compile_VICASCII_Livneh2013_locations(maptable):
@@ -97,10 +100,16 @@ def compile_VICASCII_Livneh2013_locations(maptable):
     locations2013=[]
     for row in maptable:
         if maptable.index(row)!=0:
-            loci='_'.join(['VIC_subdaily_fluxes_Livneh_CONUSExt_v.1.2_2013',row[latitude], row[longitude]])
-            url=["ftp://ftp.hydro.washington.edu/pub/blivneh/CONUS/Derived.Subdaily.Outputs.asc.v.1.2.1915.2011.bz2/fluxes.125.120.37.49/",loci,".bz2"]
+
+            loci='_'.join(['VIC_fluxes_Livneh_CONUSExt_v.1.2_2013',row[latitude], row[longitude]])
+            url=["ftp://ftp.hydro.washington.edu/pub/blivneh/CONUS/Fluxes.asc.v.1.2.1915.2011.bz2/fluxes.125.120.37.49/",loci,".bz2"]
+            #or
+            #url=["ftp://ftp.hydro.washington.edu/pub/blivneh/CONUS/Fluxes.asc.v.1.2.1915.2011.bz2/fluxes.canada.columbia/",loci,".bz2"]
+            
             locations2013.append(''.join(url))
     return(locations2013)
+
+
 
 
 # ### Climate (Meteorological observations)-oriented functions
@@ -123,19 +132,19 @@ def compile_dailyMET_Livneh2013_locations(maptable):
     return(locations2013)
 
 # index and extract longitude and latitude points for Livneh 2016
-def compile_dailyMET_Livneh2016_locations(maptable):
+def compile_dailyMET_Livneh2015_locations(maptable):
     # index the lat long fields
     latitude=maptable[0].index('LAT')
     longitude=maptable[0].index('LONG_')
 
     # compile the daily data for Livneh 2016
-    locations2016=[]
+    locations2015=[]
     for row in maptable:
         if maptable.index(row)!=0:
             loci='_'.join(['Meteorology_Livneh_NAmerExt_15Oct2014',row[latitude], row[longitude]])
             url=["ftp://192.12.137.7/pub/dcp/archive/OBS/livneh2014.1_16deg/ascii/daily/latitude.",row[latitude],"/",loci,".bz2"]
-            locations2016.append(''.join(url))
-    return(locations2016)
+            locations2015.append(''.join(url))
+    return(locations2015)
 
 
 # ## Data file migration functions
@@ -251,8 +260,27 @@ def decompbz2(filename):
 
 # In[ ]:
 
+
 # read in the longitude and latitude points from the reference mapping file
-def getClimateData_DailyMET_Livneh2013(homedir, mappingfile):
+def getClimateData_DailyVIC_livneh2013(homedir, mappingfile):
+    
+    # generate table of lats and long coordinates
+    maptable = read_in_longlats(mappingfile)
+    
+    # compile the longitude and latitude points
+    dailyVIClocations2013 = compile_VICASCII_Livneh2013_locations(maptable)
+
+    # check and generate VIC_ASCII Flux model livneh 2016 data directory
+    filedir=homedir+'livneh2013/Daily_VIC_1915_2011/'
+    ensure_dir(filedir)
+
+    # Download the livneh 2016 VIC_ASCII Flux model data files
+    ftp_download_p(dailyVIClocations2013)
+    os.chdir(homedir)
+    return(filedir)
+
+# read in the longitude and latitude points from the reference mapping file
+def getClimateData_DailyMET_livneh2013(homedir, mappingfile):
     
     # generate table of lats and long coordinates
     maptable = read_in_longlats(mappingfile)
@@ -270,45 +298,43 @@ def getClimateData_DailyMET_Livneh2013(homedir, mappingfile):
     return(filedir)
 
 
-# ### Get Daily Meteorological data from Livneh 2016
+# read in the longitude and latitude points from the reference mapping file
+def getClimateData_DailyVIC_livneh2015(homedir, mappingfile):
+    
+    # generate table of lats and long coordinates
+    maptable = read_in_longlats(mappingfile)
+    
+    # compile the longitude and latitude points
+    dailyVIClocations2015 = compile_VICASCII_Livneh2015_locations(maptable)
+
+    # check and generate VIC_ASCII Flux model livneh 2016 data directory
+    filedir=homedir+'livneh2016/Daily_VIC_1950_2013/'
+    ensure_dir(filedir)
+
+    # Download the livneh 2016 VIC_ASCII Flux model data files
+    ftp_download_p(dailyVIClocations2015)
+    os.chdir(homedir)
+    return(filedir)
+# ### Get Daily Meteorological data from Livneh 2015
 # formerly 'getClimateData_DailyMET_Livneh2016.py'
 
 # In[ ]:
 
 # read in the longitude and latitude points from the reference mapping file
-def getClimateData_DailyMET_Livneh2016(homedir, mappingfile):
+def getClimateData_DailyMET_Livneh2015(homedir, mappingfile):
     
     # read in the longitude and latitude points from the reference mapping file
     maptable = read_in_longlats(mappingfile)
     
     # compile the longitude and latitude points
-    dailyMETlocations2016 = compile_dailyMET_Livneh2016_locations(maptable)
+    dailyMETlocations2015 = compile_dailyMET_Livneh2015_locations(maptable)
 
     # check and generate baseline_corrected livneh2013 data directory
     filedir=homedir+'livneh2016/Daily_MET_1950_2013/'
     ensure_dir(filedir)
 
     # download the data
-    ftp_download_p(dailyMETlocations2016)
-    os.chdir(homedir)
-    return(filedir)
-
-
-
-def getClimateData_DailyVIC_Livneh2013(homedir, mappingfile):
-    
-    # generate table of lats and long coordinates
-    maptable = read_in_longlats(mappingfile)
-    
-    # compile the longitude and latitude points
-    dailyVIClocations2013 = compile_VICASCII_Livneh2013_locations(maptable)
-
-    # check and generate VIC_ASCII Flux model livneh 2016 data directory
-    filedir=homedir+'livneh2013/Daily_VIC_1915_2011/'
-    ensure_dir(filedir)
-
-    # Download the livneh 2016 VIC_ASCII Flux model data files
-    ftp_download_p(dailyVIClocations2013)
+    ftp_download_p(dailyMETlocations2015)
     os.chdir(homedir)
     return(filedir)
 

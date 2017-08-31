@@ -1,10 +1,4 @@
 
-# coding: utf-8
-
-# # Wrangling libraries
-
-# In[1]:
-
 # Import python modules
 import os
 import os.path
@@ -15,10 +9,9 @@ import bz2
 import pandas
 import wget
 
-
 # ## Define internal operations for downloading data
 
-# In[1]:
+print 'Version 5/1/17'
 
 # read in reference locations
 def read_in_longlats(mappingfile):
@@ -31,11 +24,7 @@ def read_in_longlats(mappingfile):
     csvfile.close()
     return(maptable)
 
-print 2+2
-
 # ### CIG (DHSVM)-oriented functions
-
-# In[2]:
 
 # index and extract longitude and latitude points
 def compile_bc_Livneh2013_locations(maptable):
@@ -48,7 +37,7 @@ def compile_bc_Livneh2013_locations(maptable):
     for row in maptable:
         if maptable.index(row)!=0:
             basename='_'.join(['data',row[latitude], row[longitude]])
-            url=['http://cses.washington.edu/rocinante/Livneh/bcLivneh_WWA_2013/forcs_dhsvm/',basename]
+            url=['http://cses.washington.edu/rocinante/Livneh/bcLivneh_WWA_2013/forcings_ascii/',basename]
             locations2013.append(''.join(url))
     return(locations2013)
 
@@ -73,22 +62,22 @@ def compile_Livneh2013_locations(maptable):
 # In[3]:
 
 # compile file URLs
-def compile_VICASCII_Livneh2016_locations(maptable):
+def compile_VICASCII_Livneh2015_locations(maptable):
     # index the lat long fields
     latitude=maptable[0].index('LAT')
     longitude=maptable[0].index('LONG_')
     
     # compile the VIC.ASCII data from Livneh 2016
-    locations2016=[]
+    locations2015=[]
     for row in maptable:
         if maptable.index(row)!=0:
             loci='_'.join(['Fluxes_Livneh_NAmerExt_15Oct2014',row[latitude], row[longitude]])
             url=["ftp://192.12.137.7/pub/dcp/archive/OBS/livneh2014.1_16deg/VIC.ASCII/latitude.",row[latitude],'/',loci,'.bz2']
-            locations2016.append(''.join(url))
-    return(locations2016)
+            locations2015.append(''.join(url))
+    return(locations2015)
 
 # compile file URLs
-def compile_VICASCII_Livneh2013_locations(maptable):
+def compile_VICASCII_Livneh2013_USA_locations(maptable):
     # index the lat long fields
     latitude=maptable[0].index('LAT')
     longitude=maptable[0].index('LONG_')
@@ -97,8 +86,25 @@ def compile_VICASCII_Livneh2013_locations(maptable):
     locations2013=[]
     for row in maptable:
         if maptable.index(row)!=0:
-            loci='_'.join(['VIC_subdaily_fluxes_Livneh_CONUSExt_v.1.2_2013',row[latitude], row[longitude]])
-            url=["ftp://ftp.hydro.washington.edu/pub/blivneh/CONUS/Derived.Subdaily.Outputs.asc.v.1.2.1915.2011.bz2/fluxes.125.120.37.49/",loci,".bz2"]
+
+            loci='_'.join(['VIC_fluxes_Livneh_CONUSExt_v.1.2_2013',row[latitude], row[longitude]])
+            url=["ftp://ftp.hydro.washington.edu/pub/blivneh/CONUS/Fluxes.asc.v.1.2.1915.2011.bz2/fluxes.125.120.37.49/",loci,".bz2"]
+            locations2013.append(''.join(url))
+    return(locations2013)
+
+
+def compile_VICASCII_Livneh2013_CAN_locations(maptable):
+    # index the lat long fields
+    latitude=maptable[0].index('LAT')
+    longitude=maptable[0].index('LONG_')
+    
+    # compile the VIC.ASCII data from Livneh 2013
+    locations2013=[]
+    for row in maptable:
+        if maptable.index(row)!=0:
+
+            loci='_'.join(['VIC_fluxes_Livneh_CONUSExt_v.1.2_2013',row[latitude], row[longitude]])
+            url=["ftp://ftp.hydro.washington.edu/pub/blivneh/CONUS/Fluxes.asc.v.1.2.1915.2011.bz2/fluxes.canada.columbia/",loci,".bz2"]
             locations2013.append(''.join(url))
     return(locations2013)
 
@@ -123,19 +129,54 @@ def compile_dailyMET_Livneh2013_locations(maptable):
     return(locations2013)
 
 # index and extract longitude and latitude points for Livneh 2016
-def compile_dailyMET_Livneh2016_locations(maptable):
+def compile_dailyMET_Livneh2015_locations(maptable):
     # index the lat long fields
     latitude=maptable[0].index('LAT')
     longitude=maptable[0].index('LONG_')
 
     # compile the daily data for Livneh 2016
-    locations2016=[]
+    locations2015=[]
     for row in maptable:
         if maptable.index(row)!=0:
             loci='_'.join(['Meteorology_Livneh_NAmerExt_15Oct2014',row[latitude], row[longitude]])
             url=["ftp://192.12.137.7/pub/dcp/archive/OBS/livneh2014.1_16deg/ascii/daily/latitude.",row[latitude],"/",loci,".bz2"]
-            locations2016.append(''.join(url))
-    return(locations2016)
+            locations2015.append(''.join(url))
+    return(locations2015)
+
+
+# ### WRF-oriented functions
+
+# compile file URLs  
+
+# index and extract longitude and latitude points for raw WRF NNRP
+def compile_wrfnnrp_raw_Salathe2014_locations(maptable):
+    # index the lat long fields
+    latitude=maptable[0].index('LAT')
+    longitude=maptable[0].index('LONG_')
+
+    # compile a list of file urls for Livneh et al. 2013 (CIG)
+    locations2014=[]
+    for row in maptable:
+        if maptable.index(row)!=0:
+            basename='_'.join(['data',row[latitude], row[longitude]])
+            url=['http://cses.washington.edu/rocinante/WRF/NNRP/vic_16d/WWA_1950_2010/raw/forcings_ascii/',basename]
+            locations2014.append(''.join(url))
+    return(locations2014)
+
+# index and extract longitude and latitude points for bc WRF NNRP
+def compile_wrfnnrp_bc_Salathe2014_locations(maptable):
+    # index the lat long fields
+    latitude=maptable[0].index('LAT')
+    longitude=maptable[0].index('LONG_')
+
+    # compile a list of file urls for Livneh et al. 2013 (CIG)
+    locations2014=[]
+    for row in maptable:
+        if maptable.index(row)!=0:
+            basename='_'.join(['data',row[latitude], row[longitude]])
+            url=['http://cses.washington.edu/rocinante/WRF/NNRP/vic_16d/WWA_1950_2010/bc/forcings_ascii/',basename]
+            locations2014.append(''.join(url))
+    return(locations2014)
 
 
 # ## Data file migration functions
@@ -149,29 +190,35 @@ def ensure_dir(f):
     os.chdir(f)
 
 # Download the livneh 2013 files to the livneh2013 subdirectory
-def wget_download(listofinterest, localfiledir):
+def wget_download(listofinterest):
            
     # check and download each location point, if it doesn't already exist in the download directory
     for fileurl in listofinterest:
         basename=os.path.basename(fileurl)
-        filename=localfiledir + basename # file location on the local directory
+        filename=os.path.join(os.getcwd(), basename) # file location on the local directory
         if os.path.isfile(filename):
             print('file already exists: ' + basename)
             continue
-        wget.download(fileurl)
-        wget.close()
-        print(' downloaded: ' + basename)
+        try:
+            wget.download(fileurl)
+            wget.close()
+            print(' downloaded: ' + basename)
+        except:
+            print('File does not exist at this URL: ' + basename)
         
 # Download the livneh 2013 files to the livneh2013 subdirectory
 def wget_download_one(fileurl):
     # check and download each location point, if it doesn't already exist in the download directory
     basename=os.path.basename(fileurl)
-    filename=localfiledir + basename # file location on the local directory
+    filename=os.path.join(os.getcwd(), basename) # file location on the local directory
     if os.path.isfile(filename):
         print('file already exists: ' + basename)
     else:
-        wget.download(fileurl)
-        print(' downloaded: ' + basename)
+        try:
+            wget.download(fileurl)
+            print('downloaded: ' + basename)
+        except:
+            print('File does not exist at this URL: ' + basename)
     
 def wget_download_p(listofinterest):
     from multiprocessing import Pool
@@ -198,11 +245,16 @@ def ftp_download(listofinterest):
         ftp=ftplib.FTP(ipaddress)
         ftp.login()
         ftp.cwd(path)
-        ftp.retrbinary("RETR " + filename ,open(filename, 'wb').write)
-        ftp.close()
-                
-        # decompress the file
-        decompbz2(filename)
+        try:
+            ftp.retrbinary("RETR " + filename ,open(filename, 'wb').write)
+            ftp.close()
+            
+            # decompress the file
+            decompbz2(filename)
+        except:
+            print('File does not exist at this URL: '+fileurl)
+        
+        
 
 # Download and decompress the livneh 2016 files
 def ftp_download_one(loci):
@@ -219,11 +271,14 @@ def ftp_download_one(loci):
         ftp=ftplib.FTP(ipaddress)
         ftp.login()
         ftp.cwd(path)
-        ftp.retrbinary("RETR " + filename ,open(filename, 'wb').write)
-        ftp.quit()
-
-        # decompress the file
-        decompbz2(filename)
+        try:
+            ftp.retrbinary("RETR " + filename ,open(filename, 'wb').write)
+            ftp.close()
+            
+            # decompress the file
+            decompbz2(filename)
+        except:
+            print('File does not exist at this URL: '+fileurl)
 
 def ftp_download_p(listofinterest):
     from multiprocessing import Pool
@@ -247,12 +302,44 @@ def decompbz2(filename):
 # ## Wrapper scripts
 
 # ### Get Daily Meteorological data from Livneh 2013
-# formerly 'getClimateData_subdailyMET_Livneh2013.py'
-
-# In[ ]:
 
 # read in the longitude and latitude points from the reference mapping file
-def getClimateData_DailyMET_Livneh2013(homedir, mappingfile):
+def getClimateData_DailyVIC_USA_livneh2013(homedir, mappingfile):
+    
+    # generate table of lats and long coordinates
+    maptable = read_in_longlats(mappingfile)
+    
+    # compile the longitude and latitude points
+    dailyVIClocations2013 = compile_VICASCII_Livneh2013_USA_locations(maptable)
+
+    # check and generate VIC_ASCII Flux model livneh 2016 data directory
+    filedir=homedir+'/livneh2013/Daily_VIC_1915_2011/'
+    ensure_dir(filedir)
+
+    # Download the livneh 2016 VIC_ASCII Flux model data files
+    ftp_download_p(dailyVIClocations2013)
+    os.chdir(homedir)
+    return(filedir)
+
+def getClimateData_DailyVIC_CAN_livneh2013(homedir, mappingfile):
+    
+    # generate table of lats and long coordinates
+    maptable = read_in_longlats(mappingfile)
+    
+    # compile the longitude and latitude points
+    dailyVIClocations2013 = compile_VICASCII_Livneh2013_CAN_locations(maptable)
+
+    # check and generate VIC_ASCII Flux model livneh 2016 data directory
+    filedir=homedir+'/livneh2013/Daily_VIC_1915_2011/'
+    ensure_dir(filedir)
+
+    # Download the livneh 2016 VIC_ASCII Flux model data files
+    ftp_download_p(dailyVIClocations2013)
+    os.chdir(homedir)
+    return(filedir)
+
+# read in the longitude and latitude points from the reference mapping file
+def getClimateData_DailyMET_livneh2013(homedir, mappingfile):
     
     # generate table of lats and long coordinates
     maptable = read_in_longlats(mappingfile)
@@ -261,7 +348,7 @@ def getClimateData_DailyMET_Livneh2013(homedir, mappingfile):
     dailyMETlocations2013 = compile_dailyMET_Livneh2013_locations(maptable)
 
     # check and generate VIC_ASCII Flux model livneh 2016 data directory
-    filedir=homedir+'livneh2013/Daily_MET_1915_2011/'
+    filedir=homedir+'/livneh2013/Daily_MET_1915_2011/'
     ensure_dir(filedir)
 
     # Download the livneh 2016 VIC_ASCII Flux model data files
@@ -269,48 +356,85 @@ def getClimateData_DailyMET_Livneh2013(homedir, mappingfile):
     os.chdir(homedir)
     return(filedir)
 
-
-# ### Get Daily Meteorological data from Livneh 2016
-# formerly 'getClimateData_DailyMET_Livneh2016.py'
-
-# In[ ]:
-
-# read in the longitude and latitude points from the reference mapping file
-def getClimateData_DailyMET_Livneh2016(homedir, mappingfile):
+def getClimateData_DailyMET_bcLivneh2013(homedir, mappingfile):
     
     # read in the longitude and latitude points from the reference mapping file
     maptable = read_in_longlats(mappingfile)
     
     # compile the longitude and latitude points
-    dailyMETlocations2016 = compile_dailyMET_Livneh2016_locations(maptable)
+    dailyMET_bcLivneh_locations2013 = compile_bc_Livneh2013_locations(maptable)
 
     # check and generate baseline_corrected livneh2013 data directory
-    filedir=homedir+'livneh2016/Daily_MET_1950_2013/'
+    filedir=homedir+'/livneh2013/Daily_MET_1915_2011/bc/'
     ensure_dir(filedir)
 
     # download the data
-    ftp_download_p(dailyMETlocations2016)
+    wget_download_p(dailyMET_bcLivneh_locations2013)
     os.chdir(homedir)
     return(filedir)
 
-
-
-def getClimateData_DailyVIC_Livneh2013(homedir, mappingfile):
+# read in the longitude and latitude points from the reference mapping file
+def getClimateData_DailyVIC_livneh2015(homedir, mappingfile):
     
     # generate table of lats and long coordinates
     maptable = read_in_longlats(mappingfile)
     
     # compile the longitude and latitude points
-    dailyVIClocations2013 = compile_VICASCII_Livneh2013_locations(maptable)
+    dailyVIClocations2015 = compile_VICASCII_Livneh2015_locations(maptable)
 
     # check and generate VIC_ASCII Flux model livneh 2016 data directory
-    filedir=homedir+'livneh2013/Daily_VIC_1915_2011/'
+    filedir=homedir+'/livneh2016/Daily_VIC_1950_2013/'
     ensure_dir(filedir)
 
     # Download the livneh 2016 VIC_ASCII Flux model data files
-    ftp_download_p(dailyVIClocations2013)
+    ftp_download_p(dailyVIClocations2015)
     os.chdir(homedir)
     return(filedir)
+
+
+# ### Get Daily Meteorological data from Livneh 2015
+# formerly 'getClimateData_DailyMET_Livneh2016.py'
+
+# In[ ]:
+
+# read in the longitude and latitude points from the reference mapping file
+def getClimateData_DailyMET_rawWRF(homedir, mappingfile):
+    
+    # read in the longitude and latitude points from the reference mapping file
+    maptable = read_in_longlats(mappingfile)
+    
+    # compile the longitude and latitude points
+    dailyMET_WRF_locations2014 = compile_wrfnnrp_raw_Salathe2014_locations(maptable)
+
+    # check and generate baseline_corrected livneh2013 data directory
+    filedir=homedir+'/Salathe2014/WWA_1950_2010/raw/'
+    ensure_dir(filedir)
+
+    # download the data
+    wget_download_p(dailyMET_WRF_locations2014)
+    os.chdir(homedir)
+    return(filedir)
+
+
+def getClimateData_DailyMET_bcWRF(homedir, mappingfile):
+    
+    # read in the longitude and latitude points from the reference mapping file
+    maptable = read_in_longlats(mappingfile)
+    
+    # compile the longitude and latitude points
+    dailyMET_WRF_locations2014 = compile_wrfnnrp_bc_Salathe2014_locations(maptable)
+
+    # check and generate baseline_corrected livneh2013 data directory
+    filedir=homedir+'/Salathe2014/WWA_1950_2010/bc/'
+    ensure_dir(filedir)
+
+    # download the data
+    wget_download_p(dailyMET_WRF_locations2014)
+    os.chdir(homedir)
+    return(filedir)
+
+
+
 
 
 # # Data Processing libraries
@@ -604,4 +728,3 @@ def specialTavgMeans(VarTable):
           meanpermonth_daily,
           meanallpermonth_daily,
           anom_month_daily)
-
